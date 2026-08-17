@@ -8,7 +8,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'غير مصرح.' }, { status: 401 })
   const { id } = await params
-  const { data: candidate } = await supabase.from('candidates').select('cv_path').eq('id', id).single()
+  const { data: candidate } = await supabase.from('candidates').select('cv_path, jobs!inner(user_id)').eq('id', id).eq('jobs.user_id', user.id).single()
   if (!candidate?.cv_path) return NextResponse.json({ error: 'السيرة الذاتية غير موجودة.' }, { status: 404 })
   if (!candidate.cv_path.startsWith(`${user.id}/`)) return NextResponse.json({ error: 'غير مصرح.' }, { status: 403 })
   const { data, error } = await supabase.storage.from('cvs').createSignedUrl(candidate.cv_path, 60)

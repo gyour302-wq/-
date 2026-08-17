@@ -14,7 +14,7 @@ export default function LoginPage() {
   async function submit(event: FormEvent) {
     event.preventDefault(); setLoading(true); setError('')
     const { error: authError } = await createClient().auth.signInWithPassword({ email, password })
-    if (authError) { setError(authError.message.includes('confirm') ? 'يرجى تأكيد بريدك الإلكتروني أولاً.' : 'البريد الإلكتروني أو كلمة المرور غير صحيحة.'); setLoading(false); return }
+    if (authError) { setError(authError.message.toLowerCase().includes('confirm') ? 'يرجى تأكيد بريدك الإلكتروني أولاً.' : 'البريد الإلكتروني أو كلمة المرور غير صحيحة.'); setLoading(false); return }
     router.push('/dashboard'); router.refresh()
   }
 
